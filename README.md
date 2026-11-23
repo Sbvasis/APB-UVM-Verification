@@ -2,22 +2,23 @@
 
 A class-based **SystemVerilog UVM** verification environment built to validate an **AMBA APB (Advanced Peripheral Bus)** interface, developed and simulated in **QuestaSim**.
 
-This repository showcases a modular, reusable UVM testbench featuring constrained-random stimulus generation, protocol-aware bus monitoring, a shadow-memory reference scoreboard, functional and cross coverage, SystemVerilog Assertions (SVA), wait-state flow control, and slave error (`PSLVERR`) verification[cite: 3, 4, 5, 6, 7, 9].
+This repository showcases a modular, reusable UVM testbench featuring constrained-random stimulus generation, protocol-aware bus monitoring, a shadow-memory reference scoreboard, functional and cross coverage, SystemVerilog Assertions (SVA), wait-state flow control, and slave error (`PSLVERR`) verification.
 
 ---
 
 ## 1. Project Overview
 
-The goal of this project is to verify APB read and write transfers using a structured UVM verification architecture[cite: 4, 6]. Rather than connecting to a synthesizable RTL peripheral, the environment interacts with an **APB Slave BFM (Bus Functional Model)** on the device side.
+The goal of this project is to verify APB read and write transfers using a structured UVM verification architecture. Rather than connecting to a synthesizable RTL peripheral, the environment interacts with an **APB Slave BFM (Bus Functional Model)** on the device side.
 
 ### Key Verification Capabilities
+
 * **Bus Transfers:** Directed and randomized APB `READ` and `WRITE` transactions.
 * **Protocol Phasing:** Cycle-accurate `IDLE`, `SETUP`, and `ACCESS` state transitions.
-* **Wait-State Handling:** Dynamic slave wait-state insertion and handshaking via `PREADY`[cite: 4, 5, 9].
-* **Error Signaling:** Out-of-bounds address detection and `PSLVERR` response checking[cite: 7, 9].
-* **Address Validation:** Legal word-aligned register accesses vs. unmapped/invalid addresses[cite: 6, 7, 9].
+* **Wait-State Handling:** Dynamic slave wait-state insertion and handshaking via `PREADY`.
+* **Error Signaling:** Out-of-bounds address detection and `PSLVERR` response checking.
+* **Address Validation:** Legal word-aligned register accesses vs. unmapped/invalid addresses.
 * **Data Integrity:** Automated read-after-write verification against a golden reference memory.
-* **Sign-Off Metrics:** Constrained-random testing, functional coverage closure, and concurrent APB protocol assertions[cite: 3, 5, 8].
+* **Sign-Off Metrics:** Constrained-random testing, functional coverage closure, and concurrent APB protocol assertions.
 
 ---
 
@@ -57,6 +58,9 @@ The goal of this project is to verify APB read and write transfers using a struc
           +-| apb_slave  |
             |    _bfm    |
             +------------+
+
+            +------------+
+```
 ## Transaction Data Flow
 Sequence (apb_smoke_seq / apb_random_seq / apb_error_seq)
    |
