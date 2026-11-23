@@ -57,7 +57,7 @@ The goal of this project is to verify APB read and write transfers using a struc
           +-| apb_slave  |
             |    _bfm    |
             +------------+
-Transaction Data Flow
+## Transaction Data Flow
 Sequence (apb_smoke_seq / apb_random_seq / apb_error_seq)
    |
    v
@@ -79,7 +79,46 @@ Passive Monitor (apb_monitor)
    |
    +--------> Functional Coverage (apb_coverage)
 
-3. UVM Testbench ComponentsAPB Sequence Item (apb_rw.sv)Defines the transaction-level representation (apb_rw) of an APB operation:   Stimulus Fields: Address (addr), write data (data), and operation type (apb_cmd — READ or WRITE).   Response Fields: Captured read data (rdata) and slave error flag (slverr).   Constraints: Restricts randomized transactions to 4-byte aligned addresses within the legal register map (0x0000_0000–0x0000_003C) and applies a weighted read/write distribution (60% WRITE / 40% READ).   APB Sequencer (apb_driver_seq_mon.sv)Implemented as apb_sequencer, routing directed and constrained-random apb_rw items to the driver via TLM ports.   APB Master Driver (apb_driver_seq_mon.sv)Implemented as apb_master_drv, translating apb_rw objects into pin-level activity through vif.master_cb:   Initializes bus signals in the IDLE state (PSEL = 0, PENABLE = 0).   Drives address, direction, and write data during the SETUP phase (PSEL = 1, PENABLE = 0).   Asserts PENABLE = 1 to enter the ACCESS phase.   Stalls until PREADY is sampled high.   Captures PRDATA and PSLVERR before returning the bus to IDLE.   APB Passive Monitor (apb_driver_seq_mon.sv)Implemented as apb_monitor, observing vif.monitor_cb and reconstructing completed transfers. A transfer is sampled strictly when:   
+3. UVM Components
+APB Sequence Item
+apb_rw.sv
+
+Defines the transaction-level representation of an APB operation.
+
+Main transaction fields include:
+
+Address
+Write/read command
+Write data
+Read data
+Error response
+The transaction uses constraints to generate aligned legal APB addresses and a configurable read/write distribution.
+
+APB Sequencer
+Implemented in apb_driver_seq_mon.sv.
+
+The sequencer provides directed or randomized apb_rw transactions to the driver.
+
+APB Driver
+Implemented in apb_driver_seq_mon.sv.
+
+The driver converts transaction-level requests into APB bus activity.
+
+For each transaction, the driver generates:
+
+IDLE
+SETUP
+ACCESS
+Wait for PREADY
+Capture PRDATA / PSLVERR
+The driver supports both read and write operations.
+
+APB Monitor
+Implemented in apb_driver_seq_mon.sv.
+
+The monitor observes the APB interface and reconstructs completed transactions.
+
+A transaction is sampled only when:
 
 PSEL = 1
 PENABLE = 1
